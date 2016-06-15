@@ -225,7 +225,14 @@ TEST(correctness, div_int_min)
     big_integer a = std::numeric_limits<int>::min();
     EXPECT_TRUE((a / a) == (a / std::numeric_limits<int>::min()));
 }
-
+TEST(correctness, div_int_min_2)
+{
+    big_integer a = std::numeric_limits<int>::min();
+    big_integer b = -1;
+    big_integer c = a / b;
+    EXPECT_TRUE(c == (a / -1));
+    EXPECT_TRUE((c - std::numeric_limits<int>::max()) == 1);
+}
 TEST(correctness, div_signed)
 {
     big_integer a = -20;
@@ -558,7 +565,7 @@ TEST(correctness, string_conv)
 namespace
 {
     unsigned const number_of_iterations = 10;
-    size_t const number_of_multipliers = 10;
+    size_t const number_of_multipliers = 100;
     
     int myrand()
     {

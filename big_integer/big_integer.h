@@ -61,7 +61,6 @@ struct big_integer
 private:
     std::vector <ul> data;
     int sign;
-    const unsigned long long base = (unsigned long long) (1 << 30) * 4;
 };
 
 big_integer operator+(big_integer a, big_integer const& b);

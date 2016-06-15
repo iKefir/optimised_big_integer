@@ -3,6 +3,8 @@
 #define is_null(a) (a.data.size() == 1 && a.data[0] == 0)
 #include <stdexcept>
 
+const unsigned long long base = ((ull) (1 << 30) * 4);
+
 big_integer::big_integer()
 {
     sign = 1;
@@ -180,7 +182,7 @@ big_integer& big_integer::operator*=(big_integer const& rhs)
 big_integer fuldivsmall(big_integer left, big_integer right, bool do_div) {
     ull cache(0), divizor(right.data[0]), mres;
     for (int i = (int) left.data.size() - 1; i >= 0; i--) {
-        mres = cache * left.base + left.data[i];
+        mres = cache * base + left.data[i];
         left.data[i] = (ul) (mres / divizor);
         cache = mres % divizor;
     }
@@ -228,7 +230,7 @@ big_integer fuldiv(big_integer left, big_integer right, bool do_div)
     }
     big_integer ONE(1), lb(0), rb(left), m, ans;
     long long cache, newcache;
-    long long adder = m.base >> 2;
+    long long adder = base >> 2;
     while (rb - lb > ONE) {
         m = (rb + lb);
         cache = 0;
@@ -281,46 +283,73 @@ big_integer shapeshift(big_integer a) {
 
 big_integer& big_integer::operator&=(big_integer const& rhs)
 {
-    if (sign == -1) {
-        *this = shapeshift(*this);
+    big_integer res(rhs);
+    if (data.size() > res.data.size()) {
+        data.resize(data.size() + 1);
+        res.data.resize(data.size());
     }
-    big_integer res;
-    if (rhs.sign == -1) res = shapeshift(rhs);
-    else res = rhs;
-    if (data.size() < res.data.size()) data.resize(res.data.size());
-    if (res.data.size() < data.size()) res.data.resize(data.size());
+    else if (res.data.size() > data.size()) {
+        res.data.resize(res.data.size() + 1);
+        data.resize(res.data.size());
+    } else {
+        data.resize(data.size() + 1);
+        res.data.resize(data.size());
+    }
+    
+    if (rhs.sign == -1) res = shapeshift(res);
+    if (sign == -1) *this = shapeshift(*this);
+    
     for (int i = (int) data.size() - 1; i >= 0; i--) data[i] &= res.data[i];
     if (data[data.size() - 1] >= (base / 2)) *this = shapeshift(*this);
+    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
 big_integer& big_integer::operator|=(big_integer const& rhs)
 {
-    if (sign == -1) {
-        *this = shapeshift(*this);
+    big_integer res(rhs);
+    if (data.size() > res.data.size()) {
+        data.resize(data.size() + 1);
+        res.data.resize(data.size());
     }
-    big_integer res;
-    if (rhs.sign == -1) res = shapeshift(rhs);
-    else res = rhs;
-    if (data.size() < res.data.size()) data.resize(res.data.size());
-    if (res.data.size() < data.size()) res.data.resize(data.size());
+    else if (res.data.size() > data.size()) {
+        res.data.resize(res.data.size() + 1);
+        data.resize(res.data.size());
+    } else {
+        data.resize(data.size() + 1);
+        res.data.resize(data.size());
+    }
+    
+    if (rhs.sign == -1) res = shapeshift(res);
+    if (sign == -1) *this = shapeshift(*this);
+    
     for (int i = (int) data.size() - 1; i >= 0; i--) data[i] |= res.data[i];
     if (data[data.size() - 1] >= (base / 2)) *this = shapeshift(*this);
+    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
 big_integer& big_integer::operator^=(big_integer const& rhs)
 {
-    if (sign == -1) {
-        *this = shapeshift(*this);
+    big_integer res(rhs);
+    if (data.size() > res.data.size()) {
+        data.resize(data.size() + 1);
+        res.data.resize(data.size());
     }
-    big_integer res;
-    if (rhs.sign == -1) res = shapeshift(rhs);
-    else res = rhs;
-    if (data.size() < res.data.size()) data.resize(res.data.size());
-    if (res.data.size() < data.size()) res.data.resize(data.size());
+    else if (res.data.size() > data.size()) {
+        res.data.resize(res.data.size() + 1);
+        data.resize(res.data.size());
+    } else {
+        data.resize(data.size() + 1);
+        res.data.resize(data.size());
+    }
+    
+    if (rhs.sign == -1) res = shapeshift(res);
+    if (sign == -1) *this = shapeshift(*this);
+
     for (int i = (int) data.size() - 1; i >= 0; i--) data[i] ^= res.data[i];
     if (data[data.size() - 1] >= (base / 2)) *this = shapeshift(*this);
+    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
@@ -545,11 +574,17 @@ std::ostream& operator<<(std::ostream& s, big_integer const& a)
 using namespace std;
 
 //int main() {
-////    int a = -66048;
-//    big_integer aa(-1);
-//    cout << aa << endl;
-//    aa = aa << 589;
-//    cout << aa << endl;
-//    aa = aa >> 589;
-//    cout << aa << endl;
+//    big_integer a = 0x55;
+//    big_integer b = 0xaa;
+//    
+////    EXPECT_TRUE((a & b) == 0);
+//    if ((a & b) == 0) cout << "YES\n";
+//    else cout << "NO\n";
+////    EXPECT_TRUE((a & 0xcc) == 0x44);
+//    if ((a & 0xcc) == 0x44) cout << "YES\n";
+//    else cout << "NO\n";
+//    a &= b;
+//    //    EXPECT_TRUE(a == 0);
+//    if (a == 0) cout << "YES\n";
+//    else cout << "NO\n";
 //}

@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5E9E157B1D0D941400A255A1 /* big_integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D221CDE73D200196334 /* big_integer.cpp */; };
-		5EC9A8D91D11E30C00E58BEB /* gtest_main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D291CDE756600196334 /* gtest_main.cc */; };
-		5EC9A8DA1D11E30E00E58BEB /* gtest_all.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D2B1CDE758D00196334 /* gtest_all.cc */; };
-		5EC9A8DB1D11E31100E58BEB /* big_integer_testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D251CDE748800196334 /* big_integer_testing.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -131,9 +128,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5EC9A8DB1D11E31100E58BEB /* big_integer_testing.cpp in Sources */,
-				5EC9A8DA1D11E30E00E58BEB /* gtest_all.cc in Sources */,
-				5EC9A8D91D11E30C00E58BEB /* gtest_main.cc in Sources */,
 				5E9E157B1D0D941400A255A1 /* big_integer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
