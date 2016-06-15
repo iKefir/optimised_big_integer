@@ -195,66 +195,128 @@ big_integer fuldivsmall(big_integer left, big_integer right, bool do_div) {
     }
 }
 
-big_integer fuldiv(big_integer left, big_integer right, bool do_div)
+big_integer fuldiv(big_integer u, big_integer right, bool do_div)
 {
-    int divsgn = left.sign * right.sign, modsgn = left.sign;
+    int divsgn = u.sign * right.sign, modsgn = u.sign;
     right = absolute(right);
-    left = absolute(left);
-    if (compare(left, right) == -1) {
+    u = absolute(u);
+    if (compare(u, right) == -1) {
         if (do_div) {
             return big_integer(0);
         } else {
-            left.sign = modsgn;
-            return left;
+            u.sign = modsgn;
+            return u;
         }
     }
     if (right.data.size() == 1) {
         if (right.data[0] == 1) {
             if (do_div) {
-                left.sign = divsgn;
-                return left;
+                u.sign = divsgn;
+                return u;
             } else {
                 return big_integer(0);
             }
         } else {
             if (do_div) {
-                left = fuldivsmall(left, right, do_div);
-                left.sign = divsgn;
-                return left;
+                u = fuldivsmall(u, right, do_div);
+                u.sign = divsgn;
+                return u;
             } else {
-                right = fuldivsmall(left, right, do_div);
+                right = fuldivsmall(u, right, do_div);
                 right.sign = (is_null(right) ? 1 : modsgn);
                 return right;
             }
         }
     }
-    big_integer ONE(1), lb(0), rb(left), m, ans;
-    long long cache, newcache;
-    long long adder = base >> 2;
-    while (rb - lb > ONE) {
-        m = (rb + lb);
-        cache = 0;
-        for (int i = (int) m.data.size() - 1; i >= 0; i--) {
-            newcache = m.data[i] % 2;
-            m.data[i] /= 2;
-            m.data[i] += (2 * adder) * cache;
-            cache = newcache;
+    big_integer q;
+    u.data.resize(u.data.size() + 1);
+    long long n = right.data.size(), m = u.data.size() - right.data.size(), uJ, vJ, i, t3;
+    ull guess, grem, carry, borrow, t1, t2, t;
+    ull scale;
+    q.data.resize(m + 1);
+    u.data.resize(u.data.size() + 1);
+    scale = base / (right.data[n - 1] + 1);
+    if (scale > 1) {
+        u *= scale;
+        right *= scale;
+    }
+    for (vJ = m, uJ = n + vJ; vJ >= 0; --vJ, --uJ) {
+        guess = (u.data[uJ] * base + u.data[uJ - 1]) / right.data[n - 1];
+        grem =  (u.data[uJ] * base + u.data[uJ - 1]) % right.data[n - 1];
+        
+        while (grem < base) {
+            t2 = guess * right.data[n - 2];
+            t1 = grem * base + u.data[uJ - 2];
+            
+            if ((t2 > t1) || (guess == base)) {
+                --guess;
+                grem += right.data[n - 1];
+            } else break;
         }
-        while (*(m.data.end() - 1) == 0) m.data.pop_back();
-        if (right * m > left) {
-            rb = m;
+        
+        carry = 0;
+        borrow = 0;
+        
+        for (i = 0; i < n; i++) {
+            t1 = guess * right.data[i] + carry;
+            carry = t1 / base;
+            t1 -= carry * base;
+            
+            t3 = u.data[vJ + i] - t1 - borrow;
+            if (t3 < 0) {
+                u.data[vJ + i] = (ul) (t3 + base);
+                borrow = 1;
+            } else {
+                u.data[vJ + i] = (ul) t3;
+                borrow = 0;
+            }
+        }
+        
+        t3 = u.data[vJ + i] - carry - borrow;
+        if (t3 < 0) {
+            u.data[vJ + i] = (ul) (t3 + base);
+            borrow = 1;
         } else {
-            lb = m;
+            u.data[vJ + i] = (ul) t3;
+            borrow = 0;
         }
+        
+        if (borrow == 0) {
+            q.data[vJ] = (ul) guess;
+        } else {
+            q.data[vJ] = (ul) (guess - 1);
+            
+            carry = 0;
+            for (i = 0; i < n; i++) {
+                t = u.data[vJ + i] + right.data[i] + carry;
+                if (t >= base) {
+                    u.data[vJ + i] = (ul) (t - base);
+                    carry = 1;
+                } else {
+                    u.data[vJ + i] = (ul) t;
+                    carry = 0;
+                }
+            }
+            u.data[vJ + i] = (ul) (u.data[vJ + i] + carry - base);
+        }
+        
+        i = u.data.size() - 1;
+        while ((i > 0) && (u.data[i] == 0)) i--;
+        u.data.resize(i + 1);
     }
+    
+    while ((m > 0) && (q.data[m] == 0)) m--;
+    q.data.resize(m + 1);
+    
     if (do_div) {
-        ans = lb;
-        ans.sign = divsgn;
+        q.sign = divsgn;
+        return q;
     } else {
-        ans = left - lb * right;
-        ans.sign = (is_null(ans) ? 1 : modsgn);
+        u.sign = modsgn;
+        if (scale > 1) {
+            return u / scale;
+        } else return u;
     }
-    return ans;
 }
 
 big_integer& big_integer::operator/=(big_integer const& rhs)
@@ -574,17 +636,12 @@ std::ostream& operator<<(std::ostream& s, big_integer const& a)
 using namespace std;
 
 //int main() {
-//    big_integer a = 0x55;
-//    big_integer b = 0xaa;
-//    
-////    EXPECT_TRUE((a & b) == 0);
-//    if ((a & b) == 0) cout << "YES\n";
-//    else cout << "NO\n";
-////    EXPECT_TRUE((a & 0xcc) == 0x44);
-//    if ((a & 0xcc) == 0x44) cout << "YES\n";
-//    else cout << "NO\n";
-//    a &= b;
-//    //    EXPECT_TRUE(a == 0);
-//    if (a == 0) cout << "YES\n";
-//    else cout << "NO\n";
+//    big_integer a("4557987147120026751532287735206640255083371770464657563930362844243117561042095612918172968557073635050635632185539580076508593826485317910988777068184462596225327006734993918194913323448234279452002396996521323172019307041759840466951489523675532874657454172133565577992123251278807848263098559841632633516922109710201880965060565743754708615119044029729066382457886440027343203664832090775918583970211351756800000000000000");
+//    big_integer b("1338480060433371737139966261628581962286010711621938167555887782838890477888581380583520363886868459214477841520562393537990536973741348847840729700914671344561956412211985133161021906841162086947912257974453213078397995662969139380492521381215152939135849881023433164028617203521112064069325774771118728208161598457853855662080000000000");
+//    big_integer c = a * b;
+////    cout << "C == " << c << endl;
+//    cout << (c / b == a) << endl;
+////    cout << "C == " << c << endl;
+//    cout << (c / a == b) << endl;
+//
 //}
