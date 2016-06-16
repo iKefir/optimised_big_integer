@@ -627,10 +627,6 @@ namespace
         T b = extract_random_element(v);
         
         T ab = a * b;
-        if (ab / a == b) {}
-        else std::cout << a << "\n\n" << b << "\n";
-        if (ab / b == a) {}
-        else std::cout << b << "\n\n" << a << "\n";
         ASSERT_TRUE(ab / a == b);
         ASSERT_TRUE(ab / b == a);
         
@@ -660,7 +656,6 @@ TEST(correctness, mul_merge_randomized)
         big_integer a = merge_all(x);
         big_integer b = merge_all(x);
         
-        if (a != b) std::cout << a << "\n\n" << b << "\n";
         EXPECT_TRUE(a == b);
     }
 }
