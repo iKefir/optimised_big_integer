@@ -1,12 +1,13 @@
 #ifndef BIG_INTEGER_H
 #define BIG_INTEGER_H
-#define ull unsigned long long
-#define ul unsigned int
 
 #include <iosfwd>
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cstdint>
+#define ull uint64_t
+#define ul uint32_t
 
 
 struct big_integer
