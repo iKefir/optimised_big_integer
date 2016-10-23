@@ -84,11 +84,14 @@ big_integer::~big_integer()
 
 big_integer& big_integer::operator=(big_integer const& other)
 {
+    data = other.data;
     sign = other.sign;
+    /*
     data.resize(other.data.size());
     for (int32_t i = 0; i < (int) data.size(); i++) {
         data[i] = other.data[i];
-    }
+    }*/
+    
     return *this;
 }
 
@@ -233,12 +236,12 @@ big_integer fuldiv(big_integer u, big_integer right, bool do_div)
     ull guess, grem, carry, borrow, t1, t2, t;
     ull scale;
     q.data.resize(m + 1);
-    u.data.resize(u.data.size() + 1);
     scale = base / (right.data[n - 1] + 1);
     if (scale > 1) {
         u *= scale;
         right *= scale;
     }
+    u.data.resize(u.data.size() + 1);
     for (vJ = m, uJ = n + vJ; vJ >= 0; --vJ, --uJ) {
         guess = (u.data[uJ] * base + u.data[uJ - 1]) / right.data[n - 1];
         grem =  (u.data[uJ] * base + u.data[uJ - 1]) % right.data[n - 1];

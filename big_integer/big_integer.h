@@ -15,7 +15,7 @@ struct big_integer
     big_integer();
     big_integer(big_integer const& other);
     big_integer(int a);
-    big_integer(unsigned long long a);
+    big_integer(ull a);
     explicit big_integer(std::string const& str);
     ~big_integer();
     
