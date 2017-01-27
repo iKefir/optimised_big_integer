@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <cstdint>
+#include "optimised_vector.h"
 #define ull uint64_t
 #define ul uint32_t
 
@@ -60,7 +61,7 @@ struct big_integer
     friend std::string to_string(big_integer const& a);
     
 private:
-    std::vector <ul> data;
+    optimised_vector data;
     int sign;
 };
 

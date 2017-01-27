@@ -15,10 +15,7 @@ big_integer::big_integer()
 big_integer::big_integer(big_integer const& other)
 {
     sign = other.sign;
-    data.resize(other.data.size());
-    for (int32_t i = 0; i < (int) data.size(); i++) {
-        data[i] = other.data[i];
-    }
+    data = other.data;
 }
 
 big_integer::big_integer(int a)
@@ -59,7 +56,7 @@ big_integer::big_integer(std::string const& str)
     }
     int32_t cache = 0;
     big_integer TEN(100000000);
-    for (int32_t i = start; i < (int) a.length(); i++) {
+    for (size_t i = start; i < a.length(); i++) {
         cache *= 10;
         cache += a[i] - 48;
         if (i % 8 == 7) {
@@ -86,11 +83,6 @@ big_integer& big_integer::operator=(big_integer const& other)
 {
     data = other.data;
     sign = other.sign;
-    /*
-    data.resize(other.data.size());
-    for (int32_t i = 0; i < (int) data.size(); i++) {
-        data[i] = other.data[i];
-    }*/
     
     return *this;
 }
@@ -99,14 +91,14 @@ big_integer& big_integer::operator+=(big_integer const& rhs)
 {
     if (sign == rhs.sign) {
         int64_t cache = 0, midres;
-        int32_t msize = (int) std::max(data.size(), rhs.data.size()) + 1;
+        size_t msize = std::max(data.size(), rhs.data.size()) + 1;
         data.resize(msize);
-        for (int32_t i = 0; i < msize; i++) {
-            midres = (long long) data[i] + (long long) ((int) rhs.data.size() > i ? rhs.data[i] : 0) + cache;
+        for (size_t i = 0; i < msize; i++) {
+            midres = (int64_t) data[i] + (int64_t) (rhs.data.size() > i ? rhs.data[i] : 0) + cache;
             cache = midres / base;
             data[i] = (ul) (midres % base);
         }
-        if (*(data.end() - 1) == 0) data.pop_back();
+        if (data.back() == 0) data.pop_back();
     } else {
         sign = -sign;
         *this = rhs - *this;
@@ -123,8 +115,8 @@ big_integer& big_integer::operator-=(big_integer const& rhs)
         }
         if (comp * sign == 1) {
             int64_t cache = 0, midres;
-            for (int32_t i = 0; i < (int) data.size(); i++) {
-                midres = (long long) data[i] - (long long) ((int) rhs.data.size() > i ? rhs.data[i] : 0) - cache;
+            for (size_t i = 0; i < data.size(); i++) {
+                midres = (int64_t) data[i] - (int64_t) (rhs.data.size() > i ? rhs.data[i] : 0) - cache;
                 cache = 0;
                 if (midres < 0) {
                     midres += base;
@@ -132,13 +124,13 @@ big_integer& big_integer::operator-=(big_integer const& rhs)
                 }
                 data[i] = (ul) midres;
             }
-            while (*(data.end() - 1) == 0) data.pop_back();
+            while (data.back() == 0) data.pop_back();
         }
         if (comp * sign == -1) {
             data.resize(rhs.data.size());
             int64_t cache = 0, midres;
-            for (int32_t i = 0; i < (int) data.size(); i++) {
-                midres = ((long long) rhs.data[i] - (long long) data[i] - cache);
+            for (size_t i = 0; i < data.size(); i++) {
+                midres = ((int64_t) rhs.data[i] - (int64_t) data[i] - cache);
                 cache = 0;
                 if (midres < 0) {
                     midres += base;
@@ -146,7 +138,7 @@ big_integer& big_integer::operator-=(big_integer const& rhs)
                 }
                 data[i] = (ul) midres;
             }
-            while (*(data.end() - 1) == 0) data.pop_back();
+            while (data.back() == 0) data.pop_back();
             sign = -sign;
         }
     } else {
@@ -164,9 +156,9 @@ big_integer& big_integer::operator*=(big_integer const& rhs)
     } else {
         big_integer res = big_integer(0);
         res.sign = sign * rhs.sign;
-        int64_t cache, mres;
+        ull cache, mres;
         res.data.resize(data.size() + rhs.data.size());
-        for (int32_t i = 0; i < data.size(); i++) {
+        for (size_t i = 0; i < data.size(); i++) {
             cache = 0;
             for (int32_t j = 0; j < rhs.data.size(); j++) {
                 mres = (ull) res.data[i + j] + (ull) data[i] * (ull) rhs.data[j] + cache;
@@ -176,7 +168,7 @@ big_integer& big_integer::operator*=(big_integer const& rhs)
             res.data[i + rhs.data.size()] = (ul)cache;
         }
         *this = res;
-        while (*(data.end() - 1) == 0) data.pop_back();
+        while (data.back() == 0) data.pop_back();
     }
     
     return *this;
@@ -190,7 +182,7 @@ big_integer fuldivsmall(big_integer left, big_integer right, bool do_div) {
         cache = mres % divizor;
     }
     if (do_div) {
-        while (*(left.data.end() - 1) == 0) left.data.pop_back();
+        while (left.data.back() == 0) left.data.pop_back();
         return left;
     } else {
         right.data[0] = (ul) cache;
@@ -365,7 +357,7 @@ big_integer& big_integer::operator&=(big_integer const& rhs)
     
     for (int32_t i = (int) data.size() - 1; i >= 0; i--) data[i] &= res.data[i];
     if (data[data.size() - 1] >= (base / 2)) *this = shapeshift(*this);
-    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
+    while (data.back() == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
@@ -389,7 +381,7 @@ big_integer& big_integer::operator|=(big_integer const& rhs)
     
     for (int32_t i = (int) data.size() - 1; i >= 0; i--) data[i] |= res.data[i];
     if (data[data.size() - 1] >= (base / 2)) *this = shapeshift(*this);
-    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
+    while (data.back() == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
@@ -413,7 +405,7 @@ big_integer& big_integer::operator^=(big_integer const& rhs)
 
     for (int32_t i = (int) data.size() - 1; i >= 0; i--) data[i] ^= res.data[i];
     if (data[data.size() - 1] >= (base / 2)) *this = shapeshift(*this);
-    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
+    while (data.back() == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
@@ -435,7 +427,7 @@ big_integer& big_integer::operator<<=(int rhs)
         data[i + blamount] = data[i];
         data[i] = 0;
     }
-    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
+    while (data.back() == 0 && data.size() > 1) data.pop_back();
     return *this;
 }
 
@@ -461,7 +453,7 @@ big_integer& big_integer::operator>>=(int rhs)
         data[i - blamount] = data[i];
     }
     for (int32_t i = (int) data.size() - blamount; i < (int) data.size(); ++i) data[i] = 0;
-    while (*(data.end() - 1) == 0 && data.size() > 1) data.pop_back();
+    while (data.back() == 0 && data.size() > 1) data.pop_back();
     if (wasneg) {
         *this -= 1;
     }

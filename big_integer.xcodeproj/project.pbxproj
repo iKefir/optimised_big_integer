@@ -11,6 +11,7 @@
 		5EC9A8E61D121CFB00E58BEB /* gtest_main.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D291CDE756600196334 /* gtest_main.cc */; };
 		5EC9A8E71D121D0800E58BEB /* gtest_all.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D2B1CDE758D00196334 /* gtest_all.cc */; };
 		5EC9A8E81D121D0B00E58BEB /* big_integer_testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5E603D251CDE748800196334 /* big_integer_testing.cpp */; };
+		5EDE4FBA1DC32E2200B5575A /* optimised_vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EDE4FB91DC32E2200B5575A /* optimised_vector.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,8 @@
 		5E603D291CDE756600196334 /* gtest_main.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gtest_main.cc; sourceTree = "<group>"; };
 		5E603D2B1CDE758D00196334 /* gtest_all.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gtest_all.cc; sourceTree = "<group>"; };
 		5E603D2D1CDE762F00196334 /* gtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gtest.h; sourceTree = "<group>"; };
+		5EDE4FB91DC32E2200B5575A /* optimised_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = optimised_vector.cpp; sourceTree = "<group>"; };
+		5EDE4FBB1DC32E4400B5575A /* optimised_vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = optimised_vector.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +74,8 @@
 				5E603D221CDE73D200196334 /* big_integer.cpp */,
 				5E603D241CDE73E200196334 /* big_integer.h */,
 				5E603D251CDE748800196334 /* big_integer_testing.cpp */,
+				5EDE4FB91DC32E2200B5575A /* optimised_vector.cpp */,
+				5EDE4FBB1DC32E4400B5575A /* optimised_vector.h */,
 			);
 			path = big_integer;
 			sourceTree = "<group>";
@@ -133,6 +138,7 @@
 			files = (
 				5EC9A8E81D121D0B00E58BEB /* big_integer_testing.cpp in Sources */,
 				5EC9A8E71D121D0800E58BEB /* gtest_all.cc in Sources */,
+				5EDE4FBA1DC32E2200B5575A /* optimised_vector.cpp in Sources */,
 				5EC9A8E61D121CFB00E58BEB /* gtest_main.cc in Sources */,
 				5E9E157B1D0D941400A255A1 /* big_integer.cpp in Sources */,
 			);
