@@ -27,8 +27,6 @@ struct optimised_vector {
     struct cow_vector {
         std::vector<uint32_t> data;
         uint32_t link_count;
-        
-        cow_vector() : data(), link_count(1) {}
     };
     cow_vector * get_copy(cow_vector *);
     cow_vector * make_copy(cow_vector *);

@@ -113,7 +113,7 @@ optimised_vector::cow_vector * optimised_vector::get_copy(cow_vector * b) {
 }
 
 optimised_vector::cow_vector * optimised_vector::make_copy(cow_vector * b) {
-    if (b -> link_count > 1) {
+    if (b -> link_count > 0) {
         cow_vector * a = new cow_vector();
         a -> data = b -> data;
         safe_delete(b);
