@@ -68,7 +68,8 @@ uint32_t& optimised_vector::operator[](size_t ind) {
 }
 
 uint32_t const& optimised_vector::operator[](size_t ind) const {
-    return (is_big() ? b -> data[ind] : a);
+    if (is_big()) return b -> data[ind];
+    return a;
 }
 
 void optimised_vector::push_back(const uint32_t & buffer) {
