@@ -41,7 +41,7 @@ void optimised_vector::resize(size_t new_size) {
     if (new_size > 1) {
         if (!is_big()) {
             uint32_t cache = a;
-            b = new cow_vector;
+            b = new cow_vector();
             b -> data.push_back(cache);
         }
         else b = make_copy(b);
