@@ -1,5 +1,4 @@
 #include "optimised_vector.h"
-#include <stdio.h>
 
 optimised_vector::optimised_vector() {
     a = 0;
