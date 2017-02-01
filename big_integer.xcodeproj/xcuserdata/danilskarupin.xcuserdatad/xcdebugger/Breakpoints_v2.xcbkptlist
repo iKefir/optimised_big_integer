@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "big_integer/optimised_vector.cpp"
-            timestampString = "507235428.348493"
+            timestampString = "507427547.267348"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "optimised_vector::size()"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "optimised_vector::resize(size_t new_size)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
